@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EnterForm));
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.LightBoard = new System.Windows.Forms.TableLayoutPanel();
             this.EnterButton = new System.Windows.Forms.Button();
             this.WorldTB = new System.Windows.Forms.TextBox();
             this.LevelTB = new System.Windows.Forms.TextBox();
@@ -39,30 +39,31 @@
             this.DeleteButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // tableLayoutPanel1
+            // LightBoard
             // 
-            this.tableLayoutPanel1.ColumnCount = 5;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(21, 12);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 5;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(250, 250);
-            this.tableLayoutPanel1.TabIndex = 0;
+            this.LightBoard.ColumnCount = 5;
+            this.LightBoard.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.LightBoard.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.LightBoard.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.LightBoard.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.LightBoard.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.LightBoard.Location = new System.Drawing.Point(21, 12);
+            this.LightBoard.Name = "LightBoard";
+            this.LightBoard.RowCount = 5;
+            this.LightBoard.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.LightBoard.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.LightBoard.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.LightBoard.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.LightBoard.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.LightBoard.Size = new System.Drawing.Size(250, 250);
+            this.LightBoard.TabIndex = 0;
             // 
             // EnterButton
             // 
             this.EnterButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.EnterButton.FlatAppearance.BorderSize = 0;
             this.EnterButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.EnterButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.EnterButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.EnterButton.Location = new System.Drawing.Point(12, 321);
             this.EnterButton.Name = "EnterButton";
@@ -93,20 +94,22 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.label1.Location = new System.Drawing.Point(33, 286);
+            this.label1.Location = new System.Drawing.Point(20, 285);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.Size = new System.Drawing.Size(48, 18);
             this.label1.TabIndex = 4;
             this.label1.Text = "World";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.label2.Location = new System.Drawing.Point(149, 286);
+            this.label2.Location = new System.Drawing.Point(140, 285);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(33, 13);
+            this.label2.Size = new System.Drawing.Size(42, 18);
             this.label2.TabIndex = 5;
             this.label2.Text = "Level";
             // 
@@ -115,6 +118,7 @@
             this.LoadButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.LoadButton.FlatAppearance.BorderSize = 0;
             this.LoadButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.LoadButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LoadButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.LoadButton.Location = new System.Drawing.Point(101, 321);
             this.LoadButton.Name = "LoadButton";
@@ -130,6 +134,7 @@
             this.DeleteButton.Enabled = false;
             this.DeleteButton.FlatAppearance.BorderSize = 0;
             this.DeleteButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.DeleteButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DeleteButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.DeleteButton.Location = new System.Drawing.Point(190, 321);
             this.DeleteButton.Name = "DeleteButton";
@@ -152,7 +157,7 @@
             this.Controls.Add(this.LevelTB);
             this.Controls.Add(this.WorldTB);
             this.Controls.Add(this.EnterButton);
-            this.Controls.Add(this.tableLayoutPanel1);
+            this.Controls.Add(this.LightBoard);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -166,7 +171,7 @@
 
         #endregion
 
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel LightBoard;
         private System.Windows.Forms.Button EnterButton;
         private System.Windows.Forms.TextBox WorldTB;
         private System.Windows.Forms.TextBox LevelTB;

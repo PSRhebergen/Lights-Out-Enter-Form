@@ -27,7 +27,22 @@ namespace Lights_Out_Enter_Form
             this.button = button;
         }
 
-        public void ChangeColor()
+        public void resetColor() //resets color to our black
+        {
+            button.BackColor = black;
+        }
+
+        public void ChangeColor() //Cycle color forward
+        {
+            if (button.BackColor == black)
+                button.BackColor = red;
+            else if (button.BackColor == red)
+                button.BackColor = green;
+            else if (button.BackColor == green)
+                button.BackColor = black;
+        }
+
+        public void ReverseColor() //Cycle color backwards
         {
             if (button.BackColor == black)
                 button.BackColor = green;
@@ -35,9 +50,10 @@ namespace Lights_Out_Enter_Form
                 button.BackColor = red;
             else if (button.BackColor == red)
                 button.BackColor = black;
+            
         }
 
-        public string GetColorInfo()
+        public string GetColorInfo() //converts color to DB ready data
         {
             if (button.BackColor == black)
                 return "b";
@@ -50,7 +66,7 @@ namespace Lights_Out_Enter_Form
 
         }
 
-        public void ReadColor(char color)
+        public void ReadColor(char color) //DB to color conversion
         {
             if (color == 'b')
                 button.BackColor = black;
