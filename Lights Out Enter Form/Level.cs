@@ -4,19 +4,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace Lights_Out_Enter_Form
 {
-    class Level
+    public class Level
     {
         private Color green = Color.FromArgb(29, 185, 84);
         private Color red = Color.FromArgb(224, 56, 56);
         private Color black = Color.FromArgb(32, 32, 32);
 
         public Bitmap Bitmap { get; set; }
+        private Button button;
+        public Button Button { get { return button; } set { button = value; } }
 
         private int id;
         public int Id { get { return id; } set { id = value; } }
+
+        public int LevelID { get { return id % 25; } }
+        public int WorldID { get { return id / 25; } }
 
         private string colors;
         public string Colors { get { return colors; } set { colors = value; } }
@@ -31,6 +37,7 @@ namespace Lights_Out_Enter_Form
             this.Id = id;
             this.Colors = colors;
             MakeBitmap();
+            MakeButton();
         }
 
         public void Reset()
@@ -38,16 +45,7 @@ namespace Lights_Out_Enter_Form
             Id = 0;
             Colors = "bbbbbbbbbbbbbbbbbbbbbbbbb";
             MakeBitmap();
-        }
-
-        public int Get_world()
-        {
-            return Id / 25;
-        }
-
-        public int Get_level()
-        {
-            return Id % 25;
+            MakeButton();
         }
 
         public string toString()
@@ -88,6 +86,27 @@ namespace Lights_Out_Enter_Form
                     }
                 }
             }
+        }
+
+        private void MakeButton()
+        {
+            int buttonSizeX = 100;
+            int buttonSizeY = 125;
+            button = new Button
+            {
+                Size = new Size(buttonSizeX, buttonSizeY)
+            };
+            button.FlatStyle = FlatStyle.Flat;
+            button.BackColor = Color.FromArgb(64, 64, 64);
+            button.ImageAlign = ContentAlignment.TopCenter;
+            button.BackgroundImageLayout = ImageLayout.None;
+
+            button.Text = WorldID + " - " + LevelID;
+            button.ForeColor = Color.FromArgb(224, 224, 224);
+            button.TextAlign = ContentAlignment.BottomCenter;
+            button.Font = new Font("Microsoft Sans Serif", 11.25f, FontStyle.Bold);
+
+            button.BackgroundImage = Bitmap;
         }
     }
 }

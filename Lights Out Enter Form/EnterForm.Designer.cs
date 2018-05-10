@@ -163,7 +163,7 @@
             this.MaximizeBox = false;
             this.Name = "EnterForm";
             this.Text = "Lights Out Level Form";
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Load += new System.EventHandler(this.EnterForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -66,29 +66,27 @@ namespace Lights_Out_Enter_Form
             int count = 0;
             foreach (Level level in levels)
             {
-                Button button = new Button
-                {
-                    Size = new Size(buttonSizeX, buttonSizeY)
-                };
-                button.FlatStyle = FlatStyle.Flat;
-                button.BackColor = Color.FromArgb(64, 64, 64);
-                button.ImageAlign = ContentAlignment.TopCenter;
-                button.BackgroundImageLayout = ImageLayout.None;
+                level.Button.Location = new Point((buttonSizeX + buttonPad) * (count % 3), (buttonSizeY + buttonPad) * (count / 3));
 
-                button.Text = level.Get_world() + " - " + level.Get_level();
-                button.ForeColor = Color.FromArgb(224, 224, 224);
-                button.TextAlign = ContentAlignment.BottomCenter;
-                button.Font = new Font("Microsoft Sans Serif", 11.25f);
+                level.Button.MouseUp += new MouseEventHandler(Double_click);
 
-                button.Location = new Point((buttonSizeX + buttonPad) * (count % 3), (buttonSizeY + buttonPad) * (count / 3));
-
-                button.BackgroundImage = level.Bitmap;
                 count++;
 
-                this.Controls.Add(button);
+                this.Controls.Add(level.Button);
             }
+        }
 
+        private void Double_click(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            foreach (Level level in levels)
+            {
+                if (level.Button == sender as Button)
+                {
+                    Application.OpenForms.OfType<EnterForm>().Single().LoadLevel(level);
+                    this.Close();
 
+                }
+            }
         }
 
         public void printLevels()

@@ -26,7 +26,7 @@ namespace Lights_Out_Enter_Form
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void EnterForm_Load(object sender, EventArgs e)
         {
             grid = new Light[rowCount, columnCount];
 
@@ -48,9 +48,9 @@ namespace Lights_Out_Enter_Form
                 for (int j = 0; j < columnCount; j++)
                 {
                     grid[i, j] = new Light();
-                    grid[i, j].button.Dock = DockStyle.Fill;
-                    this.LightBoard.Controls.Add(grid[i, j].button, j, i);
-                    grid[i, j].button.MouseUp += new MouseEventHandler(button_click);
+                    grid[i, j].Button.Dock = DockStyle.Fill;
+                    this.LightBoard.Controls.Add(grid[i, j].Button, j, i);
+                    grid[i, j].Button.MouseUp += new MouseEventHandler(button_click);
                 }
             }
         }
@@ -99,6 +99,53 @@ namespace Lights_Out_Enter_Form
                     let++;
                 }
             }
+        }
+
+        public void LoadLevel(Level level)
+        {
+            DisplayColors(level.Colors);
+            LoadButton.Text = "Clear";
+            EnterButton.Text = "Update";
+            WorldTB.Text = level.WorldID.ToString();
+            LevelTB.Text = level.LevelID.ToString();
+            WorldTB.ReadOnly = true;
+            LevelTB.ReadOnly = true;
+            DeleteButton.Enabled = true;
+        }
+
+        private void LoadLevel(int world, int level)
+        {
+            String colors = "";
+            using (SQLConnect = new SQLiteConnection("Data Source=LightsOut.db;Version=3"))
+            {
+                SQLConnect.Open();
+                SQLiteCommand SQLCommand = new SQLiteCommand();
+                SQLCommand = SQLConnect.CreateCommand();
+                SQLCommand.CommandText = "SELECT COLORS FROM LEVELS WHERE LevelID = @levelid;";
+                SQLCommand.Parameters.AddWithValue("@levelid", get_levelID(world, level));
+                SQLiteDataReader Reader = SQLCommand.ExecuteReader();
+                Reader.Read();
+                try
+                {
+                    colors = Reader.GetString(0);
+                }
+                catch
+                {
+                    MessageBox.Show("Level does not exist.");
+                    return;
+                }
+                Reader.Close();
+                SQLCommand.Dispose();
+            }
+            DisplayColors(colors);
+
+            LoadButton.Text = "Clear";
+            EnterButton.Text = "Update";
+            WorldTB.Text = world.ToString();
+            LevelTB.Text = level.ToString();
+            WorldTB.ReadOnly = true;
+            LevelTB.ReadOnly = true;
+            DeleteButton.Enabled = true;
         }
 
         private void button_click(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -179,36 +226,9 @@ namespace Lights_Out_Enter_Form
                 }
                 else
                 {
-                    String colors = "";
-                    using (SQLConnect = new SQLiteConnection("Data Source=LightsOut.db;Version=3"))
-                    {
-                        SQLConnect.Open();
-                        SQLiteCommand SQLCommand = new SQLiteCommand();
-                        SQLCommand = SQLConnect.CreateCommand();
-                        SQLCommand.CommandText = "SELECT COLORS FROM LEVELS WHERE LevelID = @levelid;";
-                        SQLCommand.Parameters.AddWithValue("@levelid", get_levelID(Convert.ToInt32(WorldTB.Text), Convert.ToInt32(LevelTB.Text)));
-                        SQLiteDataReader Reader = SQLCommand.ExecuteReader();
-                        Reader.Read();
-                        try
-                        {
-                            colors = Reader.GetString(0);
-                        }
-                        catch
-                        {
-                            MessageBox.Show("Level does not exist.");
-                            return;
-                        }
-                        Reader.Close();
-                        SQLCommand.Dispose();
-                    }
-                    DisplayColors(colors);
-                    
-                    LoadButton.Text = "Clear";
-                    EnterButton.Text = "Update";
-                    WorldTB.ReadOnly = true;
-                    LevelTB.ReadOnly = true;
-                    DeleteButton.Enabled = true;
+                    LoadLevel(Convert.ToInt32(WorldTB.Text), Convert.ToInt32(LevelTB.Text));
                 }
+                //TODO Add handler for bad input
             }
             else
             {

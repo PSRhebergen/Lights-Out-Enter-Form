@@ -14,52 +14,53 @@ namespace Lights_Out_Enter_Form
         private Color red = Color.FromArgb(224, 56, 56);
         private Color black = Color.FromArgb(32, 32, 32);
 
-        public Button button { get; set; }
+        private Button button;
+        public Button Button { get { return button; } set { button = value; } }
         public Light()
         {
-            button = new Button { BackColor = black };
-            button.FlatStyle = 0;
-            button.FlatAppearance.BorderSize = 0;
+            Button = new Button { BackColor = black };
+            Button.FlatStyle = 0;
+            Button.FlatAppearance.BorderSize = 0;
         }
 
         public Light(Button button)
         {
-            this.button = button;
+            this.Button = button;
         }
 
         public void resetColor() //resets color to our black
         {
-            button.BackColor = black;
+            Button.BackColor = black;
         }
 
         public void ChangeColor() //Cycle color forward
         {
-            if (button.BackColor == black)
-                button.BackColor = red;
-            else if (button.BackColor == red)
-                button.BackColor = green;
-            else if (button.BackColor == green)
-                button.BackColor = black;
+            if (Button.BackColor == black)
+                Button.BackColor = red;
+            else if (Button.BackColor == red)
+                Button.BackColor = green;
+            else if (Button.BackColor == green)
+                Button.BackColor = black;
         }
 
         public void ReverseColor() //Cycle color backwards
         {
-            if (button.BackColor == black)
-                button.BackColor = green;
-            else if (button.BackColor == green)
-                button.BackColor = red;
-            else if (button.BackColor == red)
-                button.BackColor = black;
+            if (Button.BackColor == black)
+                Button.BackColor = green;
+            else if (Button.BackColor == green)
+                Button.BackColor = red;
+            else if (Button.BackColor == red)
+                Button.BackColor = black;
             
         }
 
         public string GetColorInfo() //converts color to DB ready data
         {
-            if (button.BackColor == black)
+            if (Button.BackColor == black)
                 return "b";
-            else if (button.BackColor == green)
+            else if (Button.BackColor == green)
                 return "g";
-            else if (button.BackColor == red)
+            else if (Button.BackColor == red)
                 return "r";
             else
                 return "0";
@@ -69,13 +70,13 @@ namespace Lights_Out_Enter_Form
         public void ReadColor(char color) //DB to color conversion
         {
             if (color == 'b')
-                button.BackColor = black;
+                Button.BackColor = black;
             else if (color == 'g')
-                button.BackColor = green;
+                Button.BackColor = green;
             else if (color == 'r')
-                button.BackColor = red;
+                Button.BackColor = red;
             else
-                button.BackColor = Color.White; // just in case something goes wrong
+                Button.BackColor = Color.White; // just in case something goes wrong
 
         }
     }
