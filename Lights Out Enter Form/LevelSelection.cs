@@ -15,8 +15,6 @@ namespace Lights_Out_Enter_Form
     {
         private List<Level> levels;
 
-        internal System.Windows.Forms.ImageList ImageList1;
-
         private Color green = Color.FromArgb(29, 185, 84);
         private Color red = Color.FromArgb(224, 56, 56);
         private Color black = Color.FromArgb(32, 32, 32);
@@ -62,59 +60,40 @@ namespace Lights_Out_Enter_Form
 
         public void CreatePictures()
         {
-            ImageList1 = new ImageList
-            {
-                ImageSize = new Size(100, 100)
-            };
+            int buttonSizeX = 100;
+            int buttonSizeY = 125;
+            int buttonPad = 5;
+            int count = 0;
             foreach (Level level in levels)
             {
-                Bitmap bmp = new Bitmap(100, 100);
-                Graphics graphics = Graphics.FromImage(bmp);
-
-                int boxSize = 20;
-                int x = 0;
-                int y = 0;
-
-                Brush brush;
-                foreach (char c in level.colors)
+                Button button = new Button
                 {
-                    if (c == 'b')
-                        brush = Brushes.Black;
-                    else if (c == 'r')
-                        brush = Brushes.Red;
-                    else if (c == 'g')
-                        brush = Brushes.Green;
-                    else
-                        brush = Brushes.White;
+                    Size = new Size(buttonSizeX, buttonSizeY)
+                };
+                button.FlatStyle = FlatStyle.Flat;
+                button.BackColor = Color.FromArgb(64, 64, 64);
+                button.ImageAlign = ContentAlignment.TopCenter;
+                button.BackgroundImageLayout = ImageLayout.None;
 
-                    graphics.FillRectangle(brush, x * boxSize, y * boxSize, boxSize, boxSize);
+                button.Text = level.Get_world() + " - " + level.Get_level();
+                button.ForeColor = Color.FromArgb(224, 224, 224);
+                button.TextAlign = ContentAlignment.BottomCenter;
+                button.Font = new Font("Microsoft Sans Serif", 11.25f);
 
-                    x++;
+                button.Location = new Point((buttonSizeX + buttonPad) * (count % 3), (buttonSizeY + buttonPad) * (count / 3));
 
-                    if (x == 5)
-                    {
-                        y++;
-                        x = 0;
-                    }
-                }
+                button.BackgroundImage = level.Bitmap;
+                count++;
 
-                ImageList1.Images.Add(bmp);
+                this.Controls.Add(button);
             }
 
-            Graphics theGraphics = Graphics.FromHwnd(this.Handle);
-            int xOffset, yOffset;
-            for (int count = 0; count < ImageList1.Images.Count; count++)
-            {
-                xOffset = count / 3;
-                yOffset = count % 3;
-                ImageList1.Draw(theGraphics, new Point(101*xOffset, 101*yOffset), count);
-                Application.DoEvents();
-            }
+
         }
 
         public void printLevels()
         {
-            foreach(Level L in levels)
+            foreach (Level L in levels)
             {
                 MessageBox.Show(L.toString());
             }

@@ -88,6 +88,19 @@ namespace Lights_Out_Enter_Form
             return (world * 25) + level;
         }
 
+        private void DisplayColors(string colors)
+        {
+            int let = 0;
+            for (int i = 0; i < rowCount; i++)
+            {
+                for (int j = 0; j < columnCount; j++)
+                {
+                    grid[i, j].ReadColor(colors[let]);
+                    let++;
+                }
+            }
+        }
+
         private void button_click(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             Light light = new Light(sender as Button);
@@ -163,7 +176,6 @@ namespace Lights_Out_Enter_Form
                     LevelSelection levelSelection = new LevelSelection();
                     levelSelection.Show();
                     levelSelection.CreatePictures();
-                    this.Hide();
                 }
                 else
                 {
@@ -189,15 +201,8 @@ namespace Lights_Out_Enter_Form
                         Reader.Close();
                         SQLCommand.Dispose();
                     }
-                    int let = 0;
-                    for (int i = 0; i < rowCount; i++)
-                    {
-                        for (int j = 0; j < columnCount; j++)
-                        {
-                            grid[i, j].ReadColor(colors[let]);
-                            let++;
-                        }
-                    }
+                    DisplayColors(colors);
+                    
                     LoadButton.Text = "Clear";
                     EnterButton.Text = "Update";
                     WorldTB.ReadOnly = true;
