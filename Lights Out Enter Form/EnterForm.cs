@@ -191,7 +191,6 @@ namespace Lights_Out_Enter_Form
                 }
                 else
                 {
-                    LoadLevel(Convert.ToInt32(WorldTB.Text), Convert.ToInt32(LevelTB.Text));
                     String colors = "";
                     int id = get_levelID(Convert.ToInt32(WorldTB.Text), Convert.ToInt32(LevelTB.Text));
                     using (SQLConnect = new SQLiteConnection("Data Source=LightsOut.db;Version=3"))
