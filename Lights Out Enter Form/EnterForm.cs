@@ -113,41 +113,6 @@ namespace Lights_Out_Enter_Form
             DeleteButton.Enabled = true;
         }
 
-        private void LoadLevel(int world, int level)
-        {
-            String colors = "";
-            using (SQLConnect = new SQLiteConnection("Data Source=LightsOut.db;Version=3"))
-            {
-                SQLConnect.Open();
-                SQLiteCommand SQLCommand = new SQLiteCommand();
-                SQLCommand = SQLConnect.CreateCommand();
-                SQLCommand.CommandText = "SELECT COLORS FROM LEVELS WHERE LevelID = @levelid;";
-                SQLCommand.Parameters.AddWithValue("@levelid", get_levelID(world, level));
-                SQLiteDataReader Reader = SQLCommand.ExecuteReader();
-                Reader.Read();
-                try
-                {
-                    colors = Reader.GetString(0);
-                }
-                catch
-                {
-                    MessageBox.Show("Level does not exist.");
-                    return;
-                }
-                Reader.Close();
-                SQLCommand.Dispose();
-            }
-            DisplayColors(colors);
-
-            LoadButton.Text = "Clear";
-            EnterButton.Text = "Update";
-            WorldTB.Text = world.ToString();
-            LevelTB.Text = level.ToString();
-            WorldTB.ReadOnly = true;
-            LevelTB.ReadOnly = true;
-            DeleteButton.Enabled = true;
-        }
-
         private void button_click(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             Light light = new Light(sender as Button);
@@ -227,6 +192,31 @@ namespace Lights_Out_Enter_Form
                 else
                 {
                     LoadLevel(Convert.ToInt32(WorldTB.Text), Convert.ToInt32(LevelTB.Text));
+                    String colors = "";
+                    int id = get_levelID(Convert.ToInt32(WorldTB.Text), Convert.ToInt32(LevelTB.Text));
+                    using (SQLConnect = new SQLiteConnection("Data Source=LightsOut.db;Version=3"))
+                    {
+                        SQLConnect.Open();
+                        SQLiteCommand SQLCommand = new SQLiteCommand();
+                        SQLCommand = SQLConnect.CreateCommand();
+                        SQLCommand.CommandText = "SELECT COLORS FROM LEVELS WHERE LevelID = @levelid;";
+                        SQLCommand.Parameters.AddWithValue("@levelid", id);
+                        SQLiteDataReader Reader = SQLCommand.ExecuteReader();
+                        Reader.Read();
+                        try
+                        {
+                            colors = Reader.GetString(0);
+                        }
+                        catch
+                        {
+                            MessageBox.Show("Level does not exist.");
+                            return;
+                        }
+                        Reader.Close();
+                        SQLCommand.Dispose();
+                    }
+
+                    LoadLevel(new Level(id, colors));
                 }
                 //TODO Add handler for bad input
             }
