@@ -54,6 +54,7 @@ namespace Lights_Out_Enter_Form
                     }
                 }
                 Reader.Close();
+
                 SQLCommand.Dispose();
             }
         }

@@ -21,7 +21,7 @@ namespace Lights_Out_Enter_Form
         private int id;
         public int Id { get { return id; } set { id = value; } }
 
-        public int LevelID { get { return id % 25; } }
+        public int LevelID { get { return id % 25 + 1; } }
         public int WorldID { get { return id / 25; } }
 
         private string colors;

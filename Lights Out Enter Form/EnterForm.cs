@@ -75,7 +75,7 @@ namespace Lights_Out_Enter_Form
 
         private int get_level(int ID)
         {
-            return ID % 25;
+            return ID % 25 + 1;
         }
 
         private int get_world(int ID)
@@ -85,7 +85,7 @@ namespace Lights_Out_Enter_Form
 
         private int get_levelID(int world, int level)
         {
-            return (world * 25) + level;
+            return (world * 25) + level - 1;
         }
 
         private void DisplayColors(string colors)
@@ -135,6 +135,11 @@ namespace Lights_Out_Enter_Form
                 {
                     str += grid[i, j].GetColorInfo();
                 }
+            }
+            if (Convert.ToInt32(LevelTB.Text) > 25 || Convert.ToInt32(LevelTB.Text) < 1)
+            {
+                MessageBox.Show("Invalid level number. Please enter a number between 1 and 25.");
+                return;
             }
             if (str != blank && WorldTB.Text != "" && LevelTB.Text != "")
             {
@@ -251,7 +256,7 @@ namespace Lights_Out_Enter_Form
 
 
 /*TODO
- * Add data control to make sure its good data - solvable level 
+ * Add data control to make sure its good data - solvable level  ErrorProvider Class
  * Remanage SQLConnections? Open once?
  * 
  * Use level obj here
