@@ -68,15 +68,15 @@ namespace Lights_Out_Enter_Form
             {
                 level.Button.Location = new Point((buttonSizeX + buttonPad) * (count % 3), (buttonSizeY + buttonPad) * (count / 3));
 
-                level.Button.MouseUp += new MouseEventHandler(Double_click);
+                level.Button.MouseUp += new MouseEventHandler(Button_click);
 
                 count++;
 
-                this.Controls.Add(level.Button);
+                this.LevelPanel.Controls.Add(level.Button);
             }
         }
 
-        private void Double_click(object sender, System.Windows.Forms.MouseEventArgs e)
+        private void Button_click(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             foreach (Level level in levels)
             {
@@ -84,7 +84,6 @@ namespace Lights_Out_Enter_Form
                 {
                     Application.OpenForms.OfType<EnterForm>().Single().LoadLevel(level);
                     this.Close();
-
                 }
             }
         }

@@ -97,6 +97,7 @@ namespace Lights_Out_Enter_Form
                 Size = new Size(buttonSizeX, buttonSizeY)
             };
             button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
             button.BackColor = Color.FromArgb(64, 64, 64);
             button.ImageAlign = ContentAlignment.TopCenter;
             button.BackgroundImageLayout = ImageLayout.None;

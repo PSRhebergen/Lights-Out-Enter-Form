@@ -29,7 +29,16 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LevelSelection));
+            this.LevelPanel = new System.Windows.Forms.Panel();
             this.SuspendLayout();
+            // 
+            // LevelPanel
+            // 
+            this.LevelPanel.AutoScroll = true;
+            this.LevelPanel.Location = new System.Drawing.Point(8, 8);
+            this.LevelPanel.Name = "LevelPanel";
+            this.LevelPanel.Size = new System.Drawing.Size(331, 363);
+            this.LevelPanel.TabIndex = 0;
             // 
             // LevelSelection
             // 
@@ -37,10 +46,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.Gray;
-            this.ClientSize = new System.Drawing.Size(334, 371);
+            this.CausesValidation = false;
+            this.ClientSize = new System.Drawing.Size(343, 371);
+            this.Controls.Add(this.LevelPanel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "LevelSelection";
+            this.Padding = new System.Windows.Forms.Padding(5);
             this.RightToLeftLayout = true;
             this.Text = "Level Selection";
             this.Load += new System.EventHandler(this.LevelSelection_Load);
@@ -49,5 +61,7 @@
         }
 
         #endregion
+
+        private System.Windows.Forms.Panel LevelPanel;
     }
 }
