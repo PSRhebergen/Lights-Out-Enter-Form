@@ -88,13 +88,5 @@ namespace Lights_Out_Enter_Form
                 }
             }
         }
-
-        public void printLevels()
-        {
-            foreach (Level L in levels)
-            {
-                MessageBox.Show(L.toString());
-            }
-        }
     }
 }

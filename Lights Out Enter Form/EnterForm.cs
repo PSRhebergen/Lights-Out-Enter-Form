@@ -19,6 +19,8 @@ namespace Lights_Out_Enter_Form
 
         private string blank = "bbbbbbbbbbbbbbbbbbbbbbbbb";
 
+        private bool boardValid = true;
+
         SQLiteConnection SQLConnect;
 
         public EnterForm()
@@ -53,24 +55,33 @@ namespace Lights_Out_Enter_Form
                     grid[i, j].Button.MouseUp += new MouseEventHandler(button_click);
                 }
             }
+
+            this.LevelTB.Validating += new System.ComponentModel.CancelEventHandler(this.TB_Validating);
+            this.WorldTB.Validating += new System.ComponentModel.CancelEventHandler(this.TB_Validating);
         }
 
-        private void clear_board()
+        protected void TB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            for (int i = 0; i < rowCount; i++)
+            TextBox TB = sender as TextBox;
+            int x;
+            try
             {
-                for (int j = 0; j < columnCount; j++)
-                {
-                    grid[i, j].resetColor();
-                }
+                x = Int32.Parse(TB.Text);
+                if (x < 1 && x > 25)
+                    errorProvider1.SetError(TB, "");
             }
-            WorldTB.Text = "";
-            LevelTB.Text = "";
-            LoadButton.Text = "Load";
-            EnterButton.Text = "Save";
-            WorldTB.ReadOnly = false;
-            LevelTB.ReadOnly = false;
-            DeleteButton.Enabled = false;
+            catch (Exception ex)
+            {
+                errorProvider1.SetError(TB, "Non-numerical value.");
+                boardValid = false;
+                return;
+            }
+
+            if (x < 0 || x > 25)
+            {
+                errorProvider1.SetError(TB, "Invalid value.");
+                boardValid = false;
+            }
         }
 
         private int get_level(int ID)
@@ -113,6 +124,24 @@ namespace Lights_Out_Enter_Form
             DeleteButton.Enabled = true;
         }
 
+        private void clear_board()
+        {
+            for (int i = 0; i < rowCount; i++)
+            {
+                for (int j = 0; j < columnCount; j++)
+                {
+                    grid[i, j].resetColor();
+                }
+            }
+            WorldTB.Text = "";
+            LevelTB.Text = "";
+            LoadButton.Text = "Load";
+            EnterButton.Text = "Save";
+            WorldTB.ReadOnly = false;
+            LevelTB.ReadOnly = false;
+            DeleteButton.Enabled = false;
+        }
+
         private void button_click(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             Light light = new Light(sender as Button);
@@ -136,12 +165,8 @@ namespace Lights_Out_Enter_Form
                     str += grid[i, j].GetColorInfo();
                 }
             }
-            if (Convert.ToInt32(LevelTB.Text) > 25 || Convert.ToInt32(LevelTB.Text) < 1)
-            {
-                MessageBox.Show("Invalid level number. Please enter a number between 1 and 25.");
-                return;
-            }
-            if (str != blank && WorldTB.Text != "" && LevelTB.Text != "")
+
+            if (str != blank && boardValid)
             {
                 using (SQLConnect = new SQLiteConnection("Data Source=LightsOut.db;Version=3"))
                 {
@@ -158,29 +183,29 @@ namespace Lights_Out_Enter_Form
                         SQLCommand.CommandText = "UPDATE LEVELS SET COLORS = @lights WHERE LEVELID = @ID;";
                         message = " updated";
                     }
-                        SQLCommand.Parameters.AddWithValue("@id", get_levelID(Convert.ToInt32(WorldTB.Text), Convert.ToInt32(LevelTB.Text)));
+                    SQLCommand.Parameters.AddWithValue("@id", get_levelID(Convert.ToInt32(WorldTB.Text), Convert.ToInt32(LevelTB.Text)));
                     SQLCommand.Parameters.AddWithValue("@lights", str);
                     try
                     {
                         SQLCommand.ExecuteNonQuery();
-                        MessageBox.Show("Level " + WorldTB.Text + "-" + LevelTB.Text + message);
+                        SetConfirmMessage("Level " + WorldTB.Text + "-" + LevelTB.Text + message);
                         //reset every button to black
                         clear_board();
                     }
 
                     catch (System.Data.SQLite.SQLiteException)
                     {
-                        MessageBox.Show("Level " + WorldTB.Text + "-" + LevelTB.Text + " already exists.");
+                        SetConfirmMessage("Level " + WorldTB.Text + "-" + LevelTB.Text + " already exists.");
                     }
 
                     SQLCommand.Dispose();
-
+                    boardValid = true;
 
                 }
 
             }
             else
-                MessageBox.Show("Level not added. Please try again.");
+                SetConfirmMessage("Level not added.");
 
         }
 
@@ -213,7 +238,7 @@ namespace Lights_Out_Enter_Form
                         }
                         catch
                         {
-                            MessageBox.Show("Level does not exist.");
+                            SetConfirmMessage("Level does not exist.");
                             return;
                         }
                         Reader.Close();
@@ -234,7 +259,7 @@ namespace Lights_Out_Enter_Form
         {
             if (WorldTB.Text == "" || LevelTB.Text == "")
             {
-                MessageBox.Show("World or Level not entered.");
+                SetConfirmMessage("World or Level not entered.");
                 return;
             }
             using (SQLConnect = new SQLiteConnection("Data Source=LightsOut.db;Version=3"))
@@ -246,9 +271,16 @@ namespace Lights_Out_Enter_Form
                 SQLCommand.Parameters.AddWithValue("@levelid", get_levelID(Convert.ToInt32(WorldTB.Text), Convert.ToInt32(LevelTB.Text)));
                 SQLCommand.ExecuteNonQuery();
                 SQLCommand.Dispose();
-                MessageBox.Show("Level " + WorldTB.Text + "-" + LevelTB.Text + " deleted.");
+                SetConfirmMessage("Level " + WorldTB.Text + "-" + LevelTB.Text + " deleted.");
                 clear_board();
             }
+        }
+
+        private async void SetConfirmMessage(String message)
+        {
+            ConfirmLabel.Text = message;
+            await Task.Delay(5000);
+            ConfirmLabel.Text = "";
         }
     }
 }

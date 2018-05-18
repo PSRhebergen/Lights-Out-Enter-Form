@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(EnterForm));
             this.LightBoard = new System.Windows.Forms.TableLayoutPanel();
             this.EnterButton = new System.Windows.Forms.Button();
@@ -37,6 +38,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.LoadButton = new System.Windows.Forms.Button();
             this.DeleteButton = new System.Windows.Forms.Button();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.ConfirmLabel = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // LightBoard
@@ -77,7 +81,7 @@
             // 
             this.WorldTB.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.WorldTB.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.WorldTB.Location = new System.Drawing.Point(74, 283);
+            this.WorldTB.Location = new System.Drawing.Point(72, 283);
             this.WorldTB.Name = "WorldTB";
             this.WorldTB.Size = new System.Drawing.Size(60, 20);
             this.WorldTB.TabIndex = 2;
@@ -86,7 +90,7 @@
             // 
             this.LevelTB.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.LevelTB.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.LevelTB.Location = new System.Drawing.Point(188, 283);
+            this.LevelTB.Location = new System.Drawing.Point(205, 283);
             this.LevelTB.Name = "LevelTB";
             this.LevelTB.Size = new System.Drawing.Size(60, 20);
             this.LevelTB.TabIndex = 3;
@@ -96,7 +100,7 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.label1.Location = new System.Drawing.Point(20, 285);
+            this.label1.Location = new System.Drawing.Point(18, 285);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(48, 18);
             this.label1.TabIndex = 4;
@@ -107,7 +111,7 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.label2.Location = new System.Drawing.Point(140, 285);
+            this.label2.Location = new System.Drawing.Point(157, 285);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(42, 18);
             this.label2.TabIndex = 5;
@@ -144,12 +148,29 @@
             this.DeleteButton.UseVisualStyleBackColor = false;
             this.DeleteButton.Click += new System.EventHandler(this.DeleteButton_Click);
             // 
+            // errorProvider1
+            // 
+            this.errorProvider1.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
+            this.errorProvider1.ContainerControl = this;
+            this.errorProvider1.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProvider1.Icon")));
+            // 
+            // ConfirmLabel
+            // 
+            this.ConfirmLabel.AutoSize = true;
+            this.ConfirmLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ConfirmLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.ConfirmLabel.Location = new System.Drawing.Point(12, 350);
+            this.ConfirmLabel.Name = "ConfirmLabel";
+            this.ConfirmLabel.Size = new System.Drawing.Size(0, 18);
+            this.ConfirmLabel.TabIndex = 8;
+            // 
             // EnterForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(292, 372);
+            this.Controls.Add(this.ConfirmLabel);
             this.Controls.Add(this.DeleteButton);
             this.Controls.Add(this.LoadButton);
             this.Controls.Add(this.label2);
@@ -164,6 +185,7 @@
             this.Name = "EnterForm";
             this.Text = "Lights Out Level Form";
             this.Load += new System.EventHandler(this.EnterForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -179,5 +201,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button LoadButton;
         private System.Windows.Forms.Button DeleteButton;
+        private System.Windows.Forms.ErrorProvider errorProvider1;
+        private System.Windows.Forms.Label ConfirmLabel;
     }
 }
