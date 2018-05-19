@@ -52,7 +52,7 @@ namespace Lights_Out_Enter_Form
                     grid[i, j] = new Light();
                     grid[i, j].Button.Dock = DockStyle.Fill;
                     this.LightBoard.Controls.Add(grid[i, j].Button, j, i);
-                    grid[i, j].Button.MouseUp += new MouseEventHandler(button_click);
+                    grid[i, j].Button.MouseUp += new MouseEventHandler(Light_click);
                 }
             }
 
@@ -67,20 +67,22 @@ namespace Lights_Out_Enter_Form
             try
             {
                 x = Int32.Parse(TB.Text);
-                if (x < 1 && x > 25)
+                if (x > 0 && x <= 25)
+                {
+                    errorProvider1.Clear();
                     errorProvider1.SetError(TB, "");
+                }
+                else
+                {
+                    errorProvider1.SetError(TB, "Invalid value.");
+                    boardValid = false;
+                }
             }
             catch (Exception ex)
             {
                 errorProvider1.SetError(TB, "Non-numerical value.");
                 boardValid = false;
                 return;
-            }
-
-            if (x < 0 || x > 25)
-            {
-                errorProvider1.SetError(TB, "Invalid value.");
-                boardValid = false;
             }
         }
 
@@ -124,7 +126,7 @@ namespace Lights_Out_Enter_Form
             DeleteButton.Enabled = true;
         }
 
-        private void clear_board()
+        private void Clear_board()
         {
             for (int i = 0; i < rowCount; i++)
             {
@@ -142,7 +144,7 @@ namespace Lights_Out_Enter_Form
             DeleteButton.Enabled = false;
         }
 
-        private void button_click(object sender, System.Windows.Forms.MouseEventArgs e)
+        private void Light_click(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             Light light = new Light(sender as Button);
 
@@ -190,7 +192,7 @@ namespace Lights_Out_Enter_Form
                         SQLCommand.ExecuteNonQuery();
                         SetConfirmMessage("Level " + WorldTB.Text + "-" + LevelTB.Text + message);
                         //reset every button to black
-                        clear_board();
+                        Clear_board();
                     }
 
                     catch (System.Data.SQLite.SQLiteException)
@@ -221,37 +223,43 @@ namespace Lights_Out_Enter_Form
                 }
                 else
                 {
-                    String colors = "";
-                    int id = get_levelID(Convert.ToInt32(WorldTB.Text), Convert.ToInt32(LevelTB.Text));
-                    using (SQLConnect = new SQLiteConnection("Data Source=LightsOut.db;Version=3"))
+                    try
                     {
-                        SQLConnect.Open();
-                        SQLiteCommand SQLCommand = new SQLiteCommand();
-                        SQLCommand = SQLConnect.CreateCommand();
-                        SQLCommand.CommandText = "SELECT COLORS FROM LEVELS WHERE LevelID = @levelid;";
-                        SQLCommand.Parameters.AddWithValue("@levelid", id);
-                        SQLiteDataReader Reader = SQLCommand.ExecuteReader();
-                        Reader.Read();
-                        try
+                        String colors = "";
+                        int id = get_levelID(Convert.ToInt32(WorldTB.Text), Convert.ToInt32(LevelTB.Text));
+                        using (SQLConnect = new SQLiteConnection("Data Source=LightsOut.db;Version=3"))
                         {
-                            colors = Reader.GetString(0);
+                            SQLConnect.Open();
+                            SQLiteCommand SQLCommand = new SQLiteCommand();
+                            SQLCommand = SQLConnect.CreateCommand();
+                            SQLCommand.CommandText = "SELECT COLORS FROM LEVELS WHERE LevelID = @levelid;";
+                            SQLCommand.Parameters.AddWithValue("@levelid", id);
+                            SQLiteDataReader Reader = SQLCommand.ExecuteReader();
+                            Reader.Read();
+                            try
+                            {
+                                colors = Reader.GetString(0);
+                            }
+                            catch
+                            {
+                                SetConfirmMessage("Level does not exist.");
+                                return;
+                            }
+                            Reader.Close();
+                            SQLCommand.Dispose();
                         }
-                        catch
-                        {
-                            SetConfirmMessage("Level does not exist.");
-                            return;
-                        }
-                        Reader.Close();
-                        SQLCommand.Dispose();
+                        LoadLevel(new Level(id, colors));
                     }
-
-                    LoadLevel(new Level(id, colors));
+                    catch
+                    {
+                        SetConfirmMessage("Cannot load level.");
+                    }
                 }
                 //TODO Add handler for bad input
             }
             else
             {
-                clear_board();
+                Clear_board();
             }
         }
 
@@ -269,10 +277,17 @@ namespace Lights_Out_Enter_Form
                 SQLCommand = SQLConnect.CreateCommand();
                 SQLCommand.CommandText = "DELETE FROM LEVELS WHERE LevelID = @levelid;";
                 SQLCommand.Parameters.AddWithValue("@levelid", get_levelID(Convert.ToInt32(WorldTB.Text), Convert.ToInt32(LevelTB.Text)));
-                SQLCommand.ExecuteNonQuery();
+                try
+                {
+                    SQLCommand.ExecuteNonQuery();
+                    SetConfirmMessage("Level " + WorldTB.Text + "-" + LevelTB.Text + " deleted.");
+                    Clear_board();
+                }
+                catch
+                {
+                   SetConfirmMessage("Level " + WorldTB.Text + "-" + LevelTB.Text + " was NOT deleted.");
+                }
                 SQLCommand.Dispose();
-                SetConfirmMessage("Level " + WorldTB.Text + "-" + LevelTB.Text + " deleted.");
-                clear_board();
             }
         }
 
@@ -304,9 +319,4 @@ namespace Lights_Out_Enter_Form
  * HELP menu?
  * 
  * Load in database?
- * 
- * Done
- * Fix the look of the app
- * Add Delete button - CLOSE! - I don't know, this works?
- * Add a control for repeated levels? not a bad thing
  * */
