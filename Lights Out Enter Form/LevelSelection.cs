@@ -40,7 +40,7 @@ namespace Lights_Out_Enter_Form
                 SQLConnect.Open();
                 SQLiteCommand SQLCommand = new SQLiteCommand();
                 SQLCommand = SQLConnect.CreateCommand();
-                SQLCommand.CommandText = "SELECT * FROM LEVELS;";
+                SQLCommand.CommandText = "SELECT * FROM LEVELS ORDER BY LevelID;";
                 SQLiteDataReader Reader = SQLCommand.ExecuteReader();
                 while (Reader.Read())
                 {
