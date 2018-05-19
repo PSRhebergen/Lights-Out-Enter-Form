@@ -278,8 +278,18 @@ namespace Lights_Out_Enter_Form
 
         private async void SetConfirmMessage(String message)
         {
+            int i = 224;
             ConfirmLabel.Text = message;
+            ConfirmLabel.ForeColor = Color.FromArgb(i, i, i);
             await Task.Delay(5000);
+            while (i >= 105)
+            {
+                ConfirmLabel.ForeColor = Color.FromArgb(i, i, i);
+                i -= 17;
+                await Task.Delay(50);
+
+            }
+
             ConfirmLabel.Text = "";
         }
     }
@@ -290,10 +300,8 @@ namespace Lights_Out_Enter_Form
 /*TODO
  * Add data control to make sure its good data - solvable level  ErrorProvider Class
  * Remanage SQLConnections? Open once?
- * 
- * Use level obj here
- * 
- * HELP?
+ *   
+ * HELP menu?
  * 
  * Load in database?
  * 
