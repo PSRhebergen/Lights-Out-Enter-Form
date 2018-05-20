@@ -30,6 +30,9 @@ namespace Lights_Out_Enter_Form
 
         private void EnterForm_Load(object sender, EventArgs e)
         {
+
+            LoadDB();
+
             grid = new Light[rowCount, columnCount];
 
             this.LightBoard.ColumnCount = columnCount;
@@ -83,6 +86,21 @@ namespace Lights_Out_Enter_Form
                 errorProvider1.SetError(TB, "Non-numerical value.");
                 boardValid = false;
                 return;
+            }
+        }
+
+        private void LoadDB()
+        {
+            using(OpenFileDialog openFileDialog1 = new OpenFileDialog())
+            {
+                openFileDialog1.Filter = "db files (*.db)|*db|All files (*.*)|*.*";
+                openFileDialog1.FilterIndex = 2;
+                openFileDialog1.RestoreDirectory = true;
+
+                if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    SQLConnect = new SQLiteConnection("Data Source=" + openFileDialog1.FileName + ";Version=3");
+                }
             }
         }
 
@@ -170,40 +188,39 @@ namespace Lights_Out_Enter_Form
 
             if (str != blank && boardValid)
             {
-                using (SQLConnect = new SQLiteConnection("Data Source=LightsOut.db;Version=3"))
+
+                SQLConnect.Open();
+                SQLiteCommand SQLCommand = new SQLiteCommand();
+                SQLCommand = SQLConnect.CreateCommand();
+                if (EnterButton.Text == "Save")
                 {
-                    SQLConnect.Open();
-                    SQLiteCommand SQLCommand = new SQLiteCommand();
-                    SQLCommand = SQLConnect.CreateCommand();
-                    if (EnterButton.Text == "Save")
-                    {
-                        SQLCommand.CommandText = "INSERT INTO LEVELS VALUES (@ID,@lights);";
-                        message = " created.";
-                    }
-                    else
-                    {
-                        SQLCommand.CommandText = "UPDATE LEVELS SET COLORS = @lights WHERE LEVELID = @ID;";
-                        message = " updated";
-                    }
-                    SQLCommand.Parameters.AddWithValue("@id", get_levelID(Convert.ToInt32(WorldTB.Text), Convert.ToInt32(LevelTB.Text)));
-                    SQLCommand.Parameters.AddWithValue("@lights", str);
-                    try
-                    {
-                        SQLCommand.ExecuteNonQuery();
-                        SetConfirmMessage("Level " + WorldTB.Text + "-" + LevelTB.Text + message);
-                        //reset every button to black
-                        Clear_board();
-                    }
-
-                    catch (System.Data.SQLite.SQLiteException)
-                    {
-                        SetConfirmMessage("Level " + WorldTB.Text + "-" + LevelTB.Text + " already exists.");
-                    }
-
-                    SQLCommand.Dispose();
-                    boardValid = true;
-
+                    SQLCommand.CommandText = "INSERT INTO LEVELS VALUES (@ID,@lights);";
+                    message = " created.";
                 }
+                else
+                {
+                    SQLCommand.CommandText = "UPDATE LEVELS SET COLORS = @lights WHERE LEVELID = @ID;";
+                    message = " updated";
+                }
+                SQLCommand.Parameters.AddWithValue("@id", get_levelID(Convert.ToInt32(WorldTB.Text), Convert.ToInt32(LevelTB.Text)));
+                SQLCommand.Parameters.AddWithValue("@lights", str);
+                try
+                {
+                    SQLCommand.ExecuteNonQuery();
+                    SetConfirmMessage("Level " + WorldTB.Text + "-" + LevelTB.Text + message);
+                    //reset every button to black
+                    Clear_board();
+                }
+
+                catch (System.Data.SQLite.SQLiteException)
+                {
+                    SetConfirmMessage("Level " + WorldTB.Text + "-" + LevelTB.Text + " already exists.");
+                }
+
+                SQLCommand.Dispose();
+                boardValid = true;
+
+
 
             }
             else
@@ -227,27 +244,26 @@ namespace Lights_Out_Enter_Form
                     {
                         String colors = "";
                         int id = get_levelID(Convert.ToInt32(WorldTB.Text), Convert.ToInt32(LevelTB.Text));
-                        using (SQLConnect = new SQLiteConnection("Data Source=LightsOut.db;Version=3"))
+
+                        SQLConnect.Open();
+                        SQLiteCommand SQLCommand = new SQLiteCommand();
+                        SQLCommand = SQLConnect.CreateCommand();
+                        SQLCommand.CommandText = "SELECT COLORS FROM LEVELS WHERE LevelID = @levelid;";
+                        SQLCommand.Parameters.AddWithValue("@levelid", id);
+                        SQLiteDataReader Reader = SQLCommand.ExecuteReader();
+                        Reader.Read();
+                        try
                         {
-                            SQLConnect.Open();
-                            SQLiteCommand SQLCommand = new SQLiteCommand();
-                            SQLCommand = SQLConnect.CreateCommand();
-                            SQLCommand.CommandText = "SELECT COLORS FROM LEVELS WHERE LevelID = @levelid;";
-                            SQLCommand.Parameters.AddWithValue("@levelid", id);
-                            SQLiteDataReader Reader = SQLCommand.ExecuteReader();
-                            Reader.Read();
-                            try
-                            {
-                                colors = Reader.GetString(0);
-                            }
-                            catch
-                            {
-                                SetConfirmMessage("Level does not exist.");
-                                return;
-                            }
-                            Reader.Close();
-                            SQLCommand.Dispose();
+                            colors = Reader.GetString(0);
                         }
+                        catch
+                        {
+                            SetConfirmMessage("Level does not exist.");
+                            return;
+                        }
+                        Reader.Close();
+                        SQLCommand.Dispose();
+
                         LoadLevel(new Level(id, colors));
                     }
                     catch
@@ -270,25 +286,24 @@ namespace Lights_Out_Enter_Form
                 SetConfirmMessage("World or Level not entered.");
                 return;
             }
-            using (SQLConnect = new SQLiteConnection("Data Source=LightsOut.db;Version=3"))
+
+            try
             {
                 SQLConnect.Open();
                 SQLiteCommand SQLCommand = new SQLiteCommand();
                 SQLCommand = SQLConnect.CreateCommand();
                 SQLCommand.CommandText = "DELETE FROM LEVELS WHERE LevelID = @levelid;";
                 SQLCommand.Parameters.AddWithValue("@levelid", get_levelID(Convert.ToInt32(WorldTB.Text), Convert.ToInt32(LevelTB.Text)));
-                try
-                {
-                    SQLCommand.ExecuteNonQuery();
-                    SetConfirmMessage("Level " + WorldTB.Text + "-" + LevelTB.Text + " deleted.");
-                    Clear_board();
-                }
-                catch
-                {
-                   SetConfirmMessage("Level " + WorldTB.Text + "-" + LevelTB.Text + " was NOT deleted.");
-                }
+                SQLCommand.ExecuteNonQuery();
+                SetConfirmMessage("Level " + WorldTB.Text + "-" + LevelTB.Text + " deleted.");
+                Clear_board();
                 SQLCommand.Dispose();
             }
+            catch
+            {
+                SetConfirmMessage("Level " + WorldTB.Text + "-" + LevelTB.Text + " was not deleted.");
+            }
+
         }
 
         private async void SetConfirmMessage(String message)
