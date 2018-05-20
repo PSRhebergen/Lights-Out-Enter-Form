@@ -33,13 +33,14 @@ namespace Lights_Out_Enter_Form
             try
             {
                 sqlconnect = new SQLiteConnection("Data Source=LightsOut.db;Version=3");
+                sqlconnect.Open();
             }
             catch
             {
                 LoadDB();
             }
 
-            sqlconnect.Open();
+            
 
             grid = new Light[rowCount, columnCount];
 
@@ -108,6 +109,7 @@ namespace Lights_Out_Enter_Form
                 if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     sqlconnect = new SQLiteConnection("Data Source=" + openFileDialog1.FileName + ";Version=3");
+                    sqlconnect.Open();
                 }
             }
         }
