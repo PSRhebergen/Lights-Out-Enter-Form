@@ -40,7 +40,7 @@ namespace Lights_Out_Enter_Form
                 LoadDB();
             }
 
-            
+
 
             grid = new Light[rowCount, columnCount];
 
@@ -113,7 +113,7 @@ namespace Lights_Out_Enter_Form
                 }
             }
         }
-        
+
         private void LoadFile_click(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             LoadDB();
@@ -201,7 +201,7 @@ namespace Lights_Out_Enter_Form
                 }
             }
 
-            if (str != blank && boardValid)
+            if (str != blank && boardValid && WorldTB.Text != "" && LevelTB.Text != "")
             {
                 SQLiteCommand SQLCommand = new SQLiteCommand();
                 SQLCommand = sqlconnect.CreateCommand();
@@ -232,9 +232,6 @@ namespace Lights_Out_Enter_Form
 
                 SQLCommand.Dispose();
                 boardValid = true;
-
-
-
             }
             else
                 SetConfirmMessage("Level not added.");
