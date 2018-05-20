@@ -19,7 +19,7 @@ namespace Lights_Out_Enter_Form
         private Color red = Color.FromArgb(224, 56, 56);
         private Color black = Color.FromArgb(32, 32, 32);
 
-        SQLiteConnection SQLConnect;
+        //SQLiteConnection SQLConnect;
 
         public LevelSelection()
         {
@@ -35,11 +35,9 @@ namespace Lights_Out_Enter_Form
 
         private void ReadLevels()
         {
-            using (SQLConnect = new SQLiteConnection("Data Source=LightsOut.db;Version=3"))
-            {
-                SQLConnect.Open();
+                //Application.OpenForms.OfType<EnterForm>().Single().SQLConnect.Open();
                 SQLiteCommand SQLCommand = new SQLiteCommand();
-                SQLCommand = SQLConnect.CreateCommand();
+                SQLCommand = Application.OpenForms.OfType<EnterForm>().Single().SQLConnect.CreateCommand();
                 SQLCommand.CommandText = "SELECT * FROM LEVELS ORDER BY LevelID;";
                 SQLiteDataReader Reader = SQLCommand.ExecuteReader();
                 while (Reader.Read())
@@ -57,7 +55,6 @@ namespace Lights_Out_Enter_Form
 
                 SQLCommand.Dispose();
             }
-        }
 
         public void CreatePictures()
         {

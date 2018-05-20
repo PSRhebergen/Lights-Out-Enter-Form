@@ -20,8 +20,8 @@ namespace Lights_Out_Enter_Form
         private string blank = "bbbbbbbbbbbbbbbbbbbbbbbbb";
 
         private bool boardValid = true;
-
-        SQLiteConnection SQLConnect;
+        protected SQLiteConnection sqlconnect;
+        public SQLiteConnection SQLConnect { set { sqlconnect = value; } get { return sqlconnect; } }
 
         public EnterForm()
         {
@@ -30,8 +30,16 @@ namespace Lights_Out_Enter_Form
 
         private void EnterForm_Load(object sender, EventArgs e)
         {
+            try
+            {
+                sqlconnect = new SQLiteConnection("Data Source=LightsOut.db;Version=3");
+            }
+            catch
+            {
+                LoadDB();
+            }
 
-            LoadDB();
+            sqlconnect.Open();
 
             grid = new Light[rowCount, columnCount];
 
@@ -89,19 +97,24 @@ namespace Lights_Out_Enter_Form
             }
         }
 
-        private void LoadDB()
+        protected void LoadDB()
         {
-            using(OpenFileDialog openFileDialog1 = new OpenFileDialog())
+            using (OpenFileDialog openFileDialog1 = new OpenFileDialog())
             {
-                openFileDialog1.Filter = "db files (*.db)|*db|All files (*.*)|*.*";
+                openFileDialog1.Filter = "db files (*.db)|*db";
                 openFileDialog1.FilterIndex = 2;
                 openFileDialog1.RestoreDirectory = true;
 
                 if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    SQLConnect = new SQLiteConnection("Data Source=" + openFileDialog1.FileName + ";Version=3");
+                    sqlconnect = new SQLiteConnection("Data Source=" + openFileDialog1.FileName + ";Version=3");
                 }
             }
+        }
+        
+        private void LoadFile_click(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            LoadDB();
         }
 
         private int get_level(int ID)
@@ -188,10 +201,8 @@ namespace Lights_Out_Enter_Form
 
             if (str != blank && boardValid)
             {
-
-                SQLConnect.Open();
                 SQLiteCommand SQLCommand = new SQLiteCommand();
-                SQLCommand = SQLConnect.CreateCommand();
+                SQLCommand = sqlconnect.CreateCommand();
                 if (EnterButton.Text == "Save")
                 {
                     SQLCommand.CommandText = "INSERT INTO LEVELS VALUES (@ID,@lights);";
@@ -245,9 +256,8 @@ namespace Lights_Out_Enter_Form
                         String colors = "";
                         int id = get_levelID(Convert.ToInt32(WorldTB.Text), Convert.ToInt32(LevelTB.Text));
 
-                        SQLConnect.Open();
                         SQLiteCommand SQLCommand = new SQLiteCommand();
-                        SQLCommand = SQLConnect.CreateCommand();
+                        SQLCommand = sqlconnect.CreateCommand();
                         SQLCommand.CommandText = "SELECT COLORS FROM LEVELS WHERE LevelID = @levelid;";
                         SQLCommand.Parameters.AddWithValue("@levelid", id);
                         SQLiteDataReader Reader = SQLCommand.ExecuteReader();
@@ -289,9 +299,8 @@ namespace Lights_Out_Enter_Form
 
             try
             {
-                SQLConnect.Open();
                 SQLiteCommand SQLCommand = new SQLiteCommand();
-                SQLCommand = SQLConnect.CreateCommand();
+                SQLCommand = sqlconnect.CreateCommand();
                 SQLCommand.CommandText = "DELETE FROM LEVELS WHERE LevelID = @levelid;";
                 SQLCommand.Parameters.AddWithValue("@levelid", get_levelID(Convert.ToInt32(WorldTB.Text), Convert.ToInt32(LevelTB.Text)));
                 SQLCommand.ExecuteNonQuery();
@@ -312,7 +321,7 @@ namespace Lights_Out_Enter_Form
             ConfirmLabel.Text = message;
             ConfirmLabel.ForeColor = Color.FromArgb(i, i, i);
             await Task.Delay(5000);
-            while (i >= 105)
+            while (i >= 105)//Fade the message away
             {
                 ConfirmLabel.ForeColor = Color.FromArgb(i, i, i);
                 i -= 17;
@@ -329,7 +338,6 @@ namespace Lights_Out_Enter_Form
 
 /*TODO
  * Add data control to make sure its good data - solvable level  ErrorProvider Class
- * Remanage SQLConnections? Open once?
  *   
  * HELP menu?
  * 
