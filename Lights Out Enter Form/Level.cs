@@ -59,7 +59,7 @@ namespace Lights_Out_Enter_Form
                 Bitmap = new Bitmap(100, 100);
                 Graphics graphics = Graphics.FromImage(Bitmap);
 
-                int boxSize = 20;
+                int boxSize = 19;
                 int x = 0;
                 int y = 0;
 
@@ -75,7 +75,7 @@ namespace Lights_Out_Enter_Form
                     else
                         brush = new SolidBrush(Color.White);
 
-                    graphics.FillRectangle(brush, x * boxSize, y * boxSize, boxSize, boxSize);
+                    graphics.FillRectangle(brush, x * (boxSize + 1), y * (boxSize + 1), boxSize, boxSize);
 
                     x++;
 
