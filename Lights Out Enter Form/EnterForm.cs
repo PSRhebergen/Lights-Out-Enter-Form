@@ -39,9 +39,7 @@ namespace Lights_Out_Enter_Form
             {
                 LoadDB();
             }
-
-
-
+            
             grid = new Light[rowCount, columnCount];
 
             this.LightBoard.ColumnCount = columnCount;
@@ -180,7 +178,8 @@ namespace Lights_Out_Enter_Form
         private void Light_click(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             Light light = new Light(sender as Button);
-            light.ChangeColor();
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
+                light.ChangeColor();
             
         }
 
