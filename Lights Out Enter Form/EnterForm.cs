@@ -180,11 +180,8 @@ namespace Lights_Out_Enter_Form
         private void Light_click(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             Light light = new Light(sender as Button);
-
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)
-                light.ChangeColor();
-            else if (e.Button == System.Windows.Forms.MouseButtons.Right)
-                light.ReverseColor();
+            light.ChangeColor();
+            
         }
 
         private void EnterButton_Click(object sender, EventArgs e)
