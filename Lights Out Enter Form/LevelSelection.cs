@@ -82,6 +82,7 @@ namespace Lights_Out_Enter_Form
                 {
                     Application.OpenForms.OfType<EnterForm>().Single().LoadLevel(level);
                     this.Close();
+                    break;
                 }
             }
         }

@@ -19,7 +19,6 @@ namespace Lights_Out_Enter_Form
 
         private string blank = "bbbbbbbbbbbbbbbbbbbbbbbbb";
 
-        private bool boardValid = true;
         protected SQLiteConnection sqlconnect;
         public SQLiteConnection SQLConnect { set { sqlconnect = value; } get { return sqlconnect; } }
 
