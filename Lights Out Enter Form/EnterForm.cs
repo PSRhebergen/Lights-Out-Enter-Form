@@ -39,7 +39,7 @@ namespace Lights_Out_Enter_Form
             {
                 LoadDB();
             }
-            
+
             grid = new Light[rowCount, columnCount];
 
             this.LightBoard.ColumnCount = columnCount;
@@ -66,13 +66,12 @@ namespace Lights_Out_Enter_Form
                 }
             }
 
-            this.LevelTB.Validating += new System.ComponentModel.CancelEventHandler(this.TB_Validating);
-            this.WorldTB.Validating += new System.ComponentModel.CancelEventHandler(this.TB_Validating);
+            //this.LevelTB.Validating += new System.ComponentModel.CancelEventHandler(this.TB_Validating);
+            //this.WorldTB.Validating += new System.ComponentModel.CancelEventHandler(this.TB_Validating);
         }
 
-        protected void TB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        protected bool TBValidate(TextBox TB)
         {
-            TextBox TB = sender as TextBox;
             int x;
             try
             {
@@ -81,18 +80,18 @@ namespace Lights_Out_Enter_Form
                 {
                     errorProvider1.Clear();
                     errorProvider1.SetError(TB, "");
+                    return true;
                 }
                 else
                 {
                     errorProvider1.SetError(TB, "Invalid value.");
-                    boardValid = false;
+                    return false;
                 }
             }
             catch (Exception ex)
             {
                 errorProvider1.SetError(TB, "Non-numerical value.");
-                boardValid = false;
-                return;
+                return false;
             }
         }
 
@@ -180,7 +179,7 @@ namespace Lights_Out_Enter_Form
             Light light = new Light(sender as Button);
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
                 light.ChangeColor();
-            
+
         }
 
         private void EnterButton_Click(object sender, EventArgs e)
@@ -196,38 +195,45 @@ namespace Lights_Out_Enter_Form
                     str += grid[i, j].GetColorInfo();
                 }
             }
-
-            if (str != blank && boardValid && WorldTB.Text != "" && LevelTB.Text != "")
+            TBValidate(WorldTB);
+            TBValidate(LevelTB);
+            if (str != blank && WorldTB.Text != "" && LevelTB.Text != "")
             {
-                SQLiteCommand SQLCommand = new SQLiteCommand();
-                SQLCommand = sqlconnect.CreateCommand();
-                if (EnterButton.Text == "Save")
-                {
-                    SQLCommand.CommandText = "INSERT INTO LEVELS VALUES (@ID,@lights);";
-                    message = " created.";
-                }
-                else
-                {
-                    SQLCommand.CommandText = "UPDATE LEVELS SET COLORS = @lights WHERE LEVELID = @ID;";
-                    message = " updated";
-                }
-                SQLCommand.Parameters.AddWithValue("@id", get_levelID(Convert.ToInt32(WorldTB.Text), Convert.ToInt32(LevelTB.Text)));
-                SQLCommand.Parameters.AddWithValue("@lights", str);
                 try
                 {
-                    SQLCommand.ExecuteNonQuery();
-                    SetConfirmMessage("Level " + WorldTB.Text + "-" + LevelTB.Text + message);
-                    //reset every button to black
-                    Clear_board();
-                }
+                    SQLiteCommand SQLCommand = new SQLiteCommand();
+                    SQLCommand = sqlconnect.CreateCommand();
+                    if (EnterButton.Text == "Save")
+                    {
+                        SQLCommand.CommandText = "INSERT INTO LEVELS VALUES (@ID,@lights);";
+                        message = " created.";
+                    }
+                    else
+                    {
+                        SQLCommand.CommandText = "UPDATE LEVELS SET COLORS = @lights WHERE LEVELID = @ID;";
+                        message = " updated";
+                    }
+                    SQLCommand.Parameters.AddWithValue("@id", get_levelID(Convert.ToInt32(WorldTB.Text), Convert.ToInt32(LevelTB.Text)));
+                    SQLCommand.Parameters.AddWithValue("@lights", str);
+                    try
+                    {
+                        SQLCommand.ExecuteNonQuery();
+                        SetConfirmMessage("Level " + WorldTB.Text + "-" + LevelTB.Text + message);
+                        //reset every button to black
+                        Clear_board();
+                    }
 
-                catch (System.Data.SQLite.SQLiteException)
+                    catch (System.Data.SQLite.SQLiteException)
+                    {
+                        SetConfirmMessage("Level " + WorldTB.Text + "-" + LevelTB.Text + " already exists.");
+                    }
+
+                    SQLCommand.Dispose();
+                }
+                catch
                 {
-                    SetConfirmMessage("Level " + WorldTB.Text + "-" + LevelTB.Text + " already exists.");
+                    SetConfirmMessage("Level not added.");
                 }
-
-                SQLCommand.Dispose();
-                boardValid = true;
             }
             else
                 SetConfirmMessage("Level not added.");
@@ -238,6 +244,7 @@ namespace Lights_Out_Enter_Form
         {
             if (LoadButton.Text == "Load")
             {
+                
                 if (WorldTB.Text == "" && LevelTB.Text == "")
                 {
                     LevelSelection levelSelection = new LevelSelection();
@@ -246,6 +253,8 @@ namespace Lights_Out_Enter_Form
                 }
                 else
                 {
+                    TBValidate(WorldTB);
+                    TBValidate(LevelTB);
                     try
                     {
                         String colors = "";
